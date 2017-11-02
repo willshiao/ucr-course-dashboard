@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{ "path": "config" },
+		{ "path": "lib" },
+		{ "path": "models" },
+		{ "path": "." }
+	]
+}

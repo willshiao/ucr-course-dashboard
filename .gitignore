@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+config/*
+!config/default.js
+
+# Sublime Text Workspace
+*.sublime-workspace
