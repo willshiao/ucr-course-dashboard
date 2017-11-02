@@ -3,6 +3,10 @@
 module.exports = {
   debug: false,
 
+  site: {
+    port: 3000
+  },
+
   db: {
     uri: 'mongodb://localhost/ucr-course',
     options: {
