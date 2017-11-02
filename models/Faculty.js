@@ -2,7 +2,6 @@
 
 const mongoose = require('mongoose')
 const {Schema} = mongoose
-const findOrCreate = require('mongoose-findorcreate')
 
 const facultySchema = new Schema({
   bannerId: { type: String, index: true },
@@ -14,7 +13,5 @@ const facultySchema = new Schema({
   primaryIndicator: Boolean,
   term: { type: String, index: true }
 })
-
-facultySchema.plugin(findOrCreate)
 
 module.exports = mongoose.model('Faculty', facultySchema)
