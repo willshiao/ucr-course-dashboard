@@ -1,9 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
-const config = require('config')
 const {Schema} = mongoose
-const Faculty = require('./Faculty').schema
 const MeetingsFaculty = require('./MeetingsFaculty').schema
 
 const courseSchema = new Schema({
@@ -30,7 +28,7 @@ const courseSchema = new Schema({
   linkIdentifier: String,
   isSectionLinked: Boolean,
   subjectCourse: { type: String, index: true },
-  faculty: [{ type: Schema.Types.ObjectId, ref: Faculty }],
+  faculty: [{ type: Schema.Types.ObjectId, ref: 'Faculty' }],
   meetingsFaculty: [MeetingsFaculty],
   span: { type: Number, default: 5 },
 

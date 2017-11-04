@@ -26,9 +26,11 @@ router
 router.get('/courses', AsyncHandler(async (req, res) => {
   const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id'])
   const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
+
   let query = Course.find(searchQuery)
     .limit(limit)
-    .populate('Faculty')
+  if (req.query.populate) query.populate('faculty')
+
   const courses = await query.exec()
   res.successJson(courses)
 }))
