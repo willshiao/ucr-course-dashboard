@@ -11,7 +11,9 @@ router
   .get('/faculty', AsyncHandler(async (req, res) => {
     const searchQuery = _.pick(req.query, ['bannerId', 'courseReferenceNumber', 'emailAddress', 'term'])
     const limit = req.query.limit ? Math.min(config.get('query.facultyLimit'), req.query.limit) : config.get('query.facultyLimit')
-    const faculty = await Faculty.find(searchQuery)
+    const fields = req.query.fields ? req.query.fields.split(',') : {}
+
+    const faculty = await Faculty.find(searchQuery, fields)
       .limit(limit)
       .exec()
     res.successJson(faculty)
@@ -27,8 +29,9 @@ router
   .get('/courses', AsyncHandler(async (req, res) => {
     const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id', 'scheduleTypeDescription'])
     const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
+    const fields = req.query.fields ? req.query.fields.split(',') : {}
 
-    let query = Course.find(searchQuery)
+    let query = Course.find(searchQuery, fields)
       .sort('-pollTime')
       .limit(limit)
     if (req.query.populate) query.populate('faculty')
