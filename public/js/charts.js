@@ -24,8 +24,7 @@ fetchData(defaultCourse, (data) => {
     plotOptions: {
       line: {
         marker: {
-          enabled: true,
-          fillColor: 'black'
+          enabled: true
         }
       }
     },
@@ -40,18 +39,24 @@ fetchData(defaultCourse, (data) => {
 $('#courseForm').submit((evt) => {
   evt.preventDefault()
   const newClass = courseSelector.val()
-  fetchData(newClass, (data) => {
+  const newCrn = $('#crnSelect').val()
+  const name = `${newClass} (${newCrn}) enrollment`
+
+  fetchDataByCrn(newCrn, (data) => {
     if ($('#overlay-check').is(':checked')) {
       myChart.addSeries({
         data,
-        name: `${newClass} enrollment`
+        name,
+        step: true
       })
     } else {
-      myChart.update({
-        series: [{
-          data,
-          name: `${newClass} enrollment`
-        }]
+      while (myChart.series.length > 0) { // Remove all data
+        myChart.series[0].remove(true)
+      }
+      myChart.addSeries({
+        data,
+        name,
+        step: true
       })
     }
   })
@@ -72,16 +77,41 @@ $.getJSON('/api/courses/distinct', (res) => {
   }, {
     name: 'courses',
     source: courses
+  }).bind('typeahead:idle', (ev) => {
+    $('#update-btn').prop('disabled', true)
+    getSections($('#search').val(), 'Lecture', (data) => {
+      if (data.length > 0) $('#update-btn').prop('disabled', false)
+    })
   })
 })
 
+function getSections (course, type = 'Lecture', cb) {
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=${type}&distinct=courseReferenceNumber`, function (res) {
+    if (res.status !== 'success') return console.error('Failed to get sections')
+    const options = $('#crnSelect')
+    options.html('')
+
+    for (let i = 0; i < res.data.length; ++i) {
+      options.append($('<option></option>').html(res.data[i]))
+    }
+    if (cb) cb(res.data)
+  })
+}
+
 function fetchData (course, cb) {
-  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture`, function (reqData) {
-    console.log(reqData)
-    if (reqData.status !== 'success') return console.error('Failed to make request')
-    let data = processData(reqData.data)
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture`, function (res) {
+    console.log(res)
+    if (res.status !== 'success') return console.error('Failed to make request')
+    let data = processData(res.data)
     console.log(data)
     return cb(data)
+  })
+}
+
+function fetchDataByCrn (crn, cb) {
+  $.getJSON(`/api/courses?courseReferenceNumber=${crn}`, (res) => {
+    if (res.status !== 'success') return console.error('Failed to get course data by CRN')
+    return cb(processData(res.data))
   })
 }
 
