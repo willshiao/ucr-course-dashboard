@@ -17,9 +17,19 @@ fetchData(course, (data) => {
       type: 'datetime',
       title: { text: 'Time' }
     },
+    plotOptions: {
+      line: {
+        marker: {
+          enabled: true,
+          fillColor: 'black'
+          // radius: 3
+        }
+      }
+    },
     series: [{
       data,
-      name: 'Enrollment'
+      name: 'Enrollment',
+      step: true
     }]
   })
 })
@@ -37,7 +47,7 @@ $('#classSelect').change(() => {
 })
 
 function fetchData (course, cb) {
-  $.getJSON(`/api/courses?subjectCourse=${course}`, function (reqData) {
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture`, function (reqData) {
     console.log(reqData)
     if (reqData.status !== 'success') return console.error('Failed to make request')
     let data = processData(reqData.data)
