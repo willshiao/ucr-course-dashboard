@@ -3,14 +3,18 @@
 const SPAN_INTERVAL = 5
 let myChart
 
-const course = $('#classSelect').val()
-console.log('Course:', course)
+const courseSelector = $('#classSelect')
+console.log('Course:', courseSelector.val())
 
-fetchData(course, (data) => {
+fetchData(courseSelector.val(), (data) => {
   myChart = Highcharts.chart('mainChart', {
-    title: 'Course Data',
+    title: {
+      text: 'UCR Course Data (Winter 2017)'
+    },
+    subtitle: {
+      text: 'Click and drag to zoom'
+    },
     chart: {
-      // type: 'spline'
       zoomType: 'x'
     },
     xAxis: {
@@ -22,7 +26,6 @@ fetchData(course, (data) => {
         marker: {
           enabled: true,
           fillColor: 'black'
-          // radius: 3
         }
       }
     },
@@ -34,8 +37,8 @@ fetchData(course, (data) => {
   })
 })
 
-$('#classSelect').change(() => {
-  const newClass = $('#classSelect').val()
+courseSelector.change(() => {
+  const newClass = courseSelector.val()
   fetchData(newClass, (data) => {
     myChart.update({
       series: [{
@@ -57,23 +60,7 @@ function fetchData (course, cb) {
 }
 
 function processData (data) {
-  // return expandArray(data.map(item => {
-  //   return {
-  //     enrollment: item.enrollment,
-  //     pollTime: item.pollTime
-  //   }
-  // }))
-  return expandArray(data)
-}
-
-function expandArray (toExpand, prop = 'enrollment') {
-  const newArray = []
-  toExpand.forEach((item, key) => {
-    // for (let i = 0; i < item.span / 5; ++i) {
-    //   newArray.push(item[prop])
-    // }
-    // newArray.push({x: key, y: })
-    newArray.push([new Date(item.pollTime).getTime(), item.enrollment])
-  })
-  return newArray.sort()
+  return data
+    .map(item => [new Date(item.pollTime).getTime(), item.enrollment])
+    .reverse()
 }
