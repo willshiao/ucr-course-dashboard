@@ -5,6 +5,7 @@
 		{ "path": "lib" },
 		{ "path": "models" },
 		{ "path": "routes" },
+		{ "path": "public" },
 		{ "path": "." }
 	]
 }
