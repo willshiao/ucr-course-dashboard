@@ -7,30 +7,32 @@
 	<link rel="stylesheet" href="/css/typeaheadjs.css">
 </head>
 <body>
-	<div id="mainChart" style="width: 100%; height: 90vh;"></div>
-
-	<form action="" id="courseForm">
-		<div class="form-row">
-			<div class="form-group col-md-8">
-				<input type="text" class="form-control" id="search" value="CS111">
+	<div class="container-fluid">
+		<div id="mainChart" style="height: 80vh;"></div>
+		
+		<form action="" id="courseForm">
+			<div class="form-row">
+				<div class="form-group col-md-8">
+					<input type="text" class="form-control" id="search" value="CS111">
+				</div>
+				<div class="form-group col-md-4">
+					<!-- <label for="crnSelect">CRN</label> -->
+		      <select id="crnSelect" class="form-control">
+		      </select>
+				</div>
 			</div>
-			<div class="form-group col-md-4">
-				<!-- <label for="crnSelect">CRN</label> -->
-	      <select id="crnSelect" class="form-control">
-	      </select>
+
+			<div class="form-check">
+			  <label class="form-check-label">
+			    <input class="form-check-input" type="checkbox" value="" id="overlay-check">
+			    Overlay class data?
+			  </label>
 			</div>
-		</div>
 
-		<div class="form-check">
-		  <label class="form-check-label">
-		    <input class="form-check-input" type="checkbox" value="" id="overlay-check">
-		    Overlay class data?
-		  </label>
-		</div>
-
-
-		<button class="btn btn-primary" id="update-btn" type="submit">Update</button>
-	</form>
+			<button class="btn btn-primary" id="update-btn" type="submit">Update</button>
+		</form>
+	</div>
+		
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
