@@ -7,6 +7,10 @@ const Faculty = require('../models/Faculty')
 const Course = require('../models/Course')
 const { AsyncHandler } = require('../lib/errorHandlers')
 
+router.get('/test', (req, res) => {
+  res.send('OK')
+})
+
 router
   .get('/faculty', AsyncHandler(async (req, res) => {
     const searchQuery = _.pick(req.query, ['bannerId', 'courseReferenceNumber', 'emailAddress', 'term'])
