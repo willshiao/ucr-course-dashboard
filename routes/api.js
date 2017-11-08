@@ -24,10 +24,11 @@ router
   }))
 
 router.get('/courses', AsyncHandler(async (req, res) => {
-  const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id'])
+  const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id', 'scheduleTypeDescription'])
   const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
 
   let query = Course.find(searchQuery)
+    .sort('-pollTime')
     .limit(limit)
   if (req.query.populate) query.populate('faculty')
 
