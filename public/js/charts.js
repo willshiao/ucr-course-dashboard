@@ -4,9 +4,10 @@ const SPAN_INTERVAL = 5
 let myChart
 
 const courseSelector = $('#classSelect')
+const defaultCourse = 'CS111'
 console.log('Course:', courseSelector.val())
 
-fetchData(courseSelector.val(), (data) => {
+fetchData(defaultCourse, (data) => {
   myChart = Highcharts.chart('mainChart', {
     title: {
       text: 'UCR Course Data (Winter 2017)'
@@ -31,7 +32,7 @@ fetchData(courseSelector.val(), (data) => {
     },
     series: [{
       data,
-      name: `${courseSelector.val()} enrollment`,
+      name: `${defaultCourse} enrollment`,
       step: true
     }]
   })
@@ -60,7 +61,9 @@ function fetchData (course, cb) {
 }
 
 function processData (data) {
-  return data
+  const newData = data
     .map(item => [new Date(item.pollTime).getTime(), item.enrollment])
     .reverse()
+  newData.push([Date.now(), newData[newData.length - 1][1]])
+  return newData
 }
