@@ -1,9 +1,8 @@
 'use strict'
 
-const SPAN_INTERVAL = 5
 let myChart
 
-const courseSelector = $('#classSelect')
+const courseSelector = $('#search')
 const defaultCourse = 'CS111'
 console.log('Course:', courseSelector.val())
 
@@ -38,7 +37,8 @@ fetchData(defaultCourse, (data) => {
   })
 })
 
-courseSelector.change(() => {
+$('#courseForm').submit((evt) => {
+  evt.preventDefault()
   const newClass = courseSelector.val()
   fetchData(newClass, (data) => {
     myChart.update({
@@ -47,6 +47,25 @@ courseSelector.change(() => {
         name: `${newClass} enrollment`
       }]
     })
+    if (cb) cb()
+  })
+})
+
+$.getJSON('/api/courses/distinct', (res) => {
+  if (res.status !== 'success') return console.error('Failed to fetch course listing')
+  const data = res.data
+
+  const courses = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    local: data
+  })
+  $('#search').typeahead({
+    minLength: 1,
+    highlight: true
+  }, {
+    name: 'courses',
+    source: courses
   })
 })
 
