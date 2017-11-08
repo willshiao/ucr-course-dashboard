@@ -31,7 +31,7 @@ fetchData(courseSelector.val(), (data) => {
     },
     series: [{
       data,
-      name: 'Enrollment',
+      name: `${courseSelector.val()} enrollment`,
       step: true
     }]
   })
@@ -43,7 +43,7 @@ courseSelector.change(() => {
     myChart.update({
       series: [{
         data,
-        name: 'Enrollment'
+        name: `${newClass} enrollment`
       }]
     })
   })

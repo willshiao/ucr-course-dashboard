@@ -23,17 +23,26 @@ router
     res.successJson(faculty)
   }))
 
-router.get('/courses', AsyncHandler(async (req, res) => {
-  const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id', 'scheduleTypeDescription'])
-  const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
+router
+  .get('/courses', AsyncHandler(async (req, res) => {
+    const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id', 'scheduleTypeDescription'])
+    const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
 
-  let query = Course.find(searchQuery)
-    .sort('-pollTime')
-    .limit(limit)
-  if (req.query.populate) query.populate('faculty')
+    let query = Course.find(searchQuery)
+      .sort('-pollTime')
+      .limit(limit)
+    if (req.query.populate) query.populate('faculty')
 
-  const courses = await query.exec()
-  res.successJson(courses)
-}))
+    const courses = await query.exec()
+    res.successJson(courses)
+  }))
+  .get('/courses/distinct', AsyncHandler(async (req, res) => {
+    const data = await Course.collection.distinct('subjectCourse')
+    res.successJson(data)
+  }))
+  .get('/courses/subjects', AsyncHandler(async (req, res) => {
+    const data = await Course.collection.distinct('subject')
+    res.successJson(data)
+  }))
 
 module.exports = router
