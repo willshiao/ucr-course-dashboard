@@ -41,13 +41,19 @@ $('#courseForm').submit((evt) => {
   evt.preventDefault()
   const newClass = courseSelector.val()
   fetchData(newClass, (data) => {
-    myChart.update({
-      series: [{
+    if ($('#overlay-check').is(':checked')) {
+      myChart.addSeries({
         data,
         name: `${newClass} enrollment`
-      }]
-    })
-    if (cb) cb()
+      })
+    } else {
+      myChart.update({
+        series: [{
+          data,
+          name: `${newClass} enrollment`
+        }]
+      })
+    }
   })
 })
 
