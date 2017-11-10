@@ -57,7 +57,7 @@ fetchData(defaultCourse, (data) => {
 function graphEverything (subject) {
   $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=Lecture`, (res) => {
     if (!$('#overlay-check').is(':checked')) clearChart()
-    function fetchData (index) {
+    function getData (index) {
       if (index >= res.data.length) return null
       const crn = res.data[index]
       fetchDataByCrn(crn, (data, name) => {
@@ -68,9 +68,9 @@ function graphEverything (subject) {
           step: true
         })
       })
-      setTimeout(() => fetchData(index + 1), 100)
+      setTimeout(() => getData(index + 1), 100)
     }
-    return fetchData(0)
+    return getData(0)
   })
 }
 
@@ -162,9 +162,18 @@ function fetchDataByCrn (crn, cb) {
 }
 
 function processData (data) {
-  const newData = data
+  let newData = data
     .map(item => [new Date(item.pollTime).getTime(), item.enrollment])
     .reverse()
+  let front = -1
+
+  for (let i = 0; i < newData.length; ++i) {
+    if (newData[i][1] === 0) {
+      front = i
+    } else {
+      break
+    }
+  }
   newData.push([Date.now(), newData[newData.length - 1][1]])
-  return newData
+  return newData.slice(front + 1)
 }
