@@ -7,6 +7,12 @@ const defaultCourse = 'CS111'
 console.log('Course:', courseSelector.val())
 
 fetchData(defaultCourse, (data) => {
+  Highcharts.setOptions({
+    global: {
+      timezone: 'America/Los_Angeles'
+    }
+  })
+
   myChart = Highcharts.chart('mainChart', {
     title: {
       text: 'UCR Course Data (Winter 2017)'
