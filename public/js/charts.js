@@ -1,10 +1,22 @@
 'use strict'
 
+// The code is messy
+// Please don't read it (for the sake of your eyes)
+
 let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
 console.log('Course:', courseSelector.val())
+
+$.getJSON('/api/courses?distinct=subject', (res) => {
+  const options = $('#subjectSelect')
+  options.html('')
+
+  for (let i = 0; i < res.data.length; ++i) {
+    options.append($('<option></option>').html(res.data[i]))
+  }
+})
 
 fetchData(defaultCourse, (data) => {
   Highcharts.setOptions({
@@ -42,6 +54,30 @@ fetchData(defaultCourse, (data) => {
   })
 })
 
+function graphEverything (subject) {
+  $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=Lecture`, (res) => {
+    if (!$('#overlay-check').is(':checked')) clearChart()
+    function fetchData (index) {
+      if (index >= res.data.length) return null
+      const crn = res.data[index]
+      fetchDataByCrn(crn, (data, name) => {
+        if (data.length <= 2) return 0
+        myChart.addSeries({
+          data,
+          name: `${name} (${crn}) enrollment`,
+          step: true
+        })
+      })
+      setTimeout(() => fetchData(index + 1), 100)
+    }
+    return fetchData(0)
+  })
+}
+
+$('#graph-all-btn').click(function () {
+  graphEverything($('#subjectSelect').val())
+})
+
 $('#courseForm').submit((evt) => {
   evt.preventDefault()
   const newClass = courseSelector.val()
@@ -56,9 +92,7 @@ $('#courseForm').submit((evt) => {
         step: true
       })
     } else {
-      while (myChart.series.length > 0) { // Remove all data
-        myChart.series[0].remove(true)
-      }
+      clearChart()
       myChart.addSeries({
         data,
         name,
@@ -91,6 +125,12 @@ $.getJSON('/api/courses/distinct', (res) => {
   })
 })
 
+function clearChart () {
+  while (myChart.series.length > 0) { // Remove all data
+    myChart.series[0].remove(true)
+  }
+}
+
 function getSections (course, type = 'Lecture', cb) {
   $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=${type}&distinct=courseReferenceNumber`, function (res) {
     if (res.status !== 'success') return console.error('Failed to get sections')
@@ -109,15 +149,15 @@ function fetchData (course, cb) {
     console.log(res)
     if (res.status !== 'success') return console.error('Failed to make request')
     let data = processData(res.data)
-    console.log(data)
+    // console.log(data)
     return cb(data)
   })
 }
 
 function fetchDataByCrn (crn, cb) {
-  $.getJSON(`/api/courses?courseReferenceNumber=${crn}`, (res) => {
+  $.getJSON(`/api/courses?courseReferenceNumber=${crn}&fields=enrollment,pollTime,subjectCourse`, (res) => {
     if (res.status !== 'success') return console.error('Failed to get course data by CRN')
-    return cb(processData(res.data))
+    return cb(processData(res.data), res.data[0] ? res.data[0].subjectCourse : null)
   })
 }
 
