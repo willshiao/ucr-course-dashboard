@@ -162,6 +162,7 @@ function fetchDataByCrn (crn, cb) {
 }
 
 function processData (data) {
+  if (data.length === 0) return []
   let newData = data
     .map(item => [new Date(item.pollTime).getTime(), item.enrollment])
     .reverse()
