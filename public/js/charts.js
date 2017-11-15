@@ -118,6 +118,22 @@ $('#courseForm').submit((evt) => {
   })
 })
 
+$('#subscribe-form').submit((evt) => {
+  evt.preventDefault()
+  $.post({
+    url: '/api/subscribe',
+    success: (res) => {
+      console.log(res)
+      if (res.status === 'success') {
+        $('#subscribeModal').modal('hide')
+        return swal('Subscribed!', 'You are now subscribed to receive notifications for the course.', 'success')
+      }
+      swal('Failed', res.message, 'warning')
+    },
+    data: $('#subscribe-form').serialize()
+  })
+})
+
 $.getJSON('/api/courses/distinct', (res) => {
   if (res.status !== 'success') return console.error('Failed to fetch course listing')
   const data = res.data

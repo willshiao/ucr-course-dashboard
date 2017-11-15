@@ -48,29 +48,29 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <div class="modal-body">
-		        <form action="" id="subscribe-form">
-	        	  <div class="form-group">
-	        	    <label for="nameInput">Name</label>
-	        	    <input type="email" class="form-control" id="nameInput" placeholder="Enter name">
-	        	  </div>
-		        	<div class="form-group">
-	        	    <label for="emailInput">Email address</label>
-	        	    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
-	        	    <small id="emailHelp" class="form-text text-muted">Enter your UCR email.</small>
-	        	  </div>
-	        	  <div class="form-group">
-	        	    <label for="crnInput">Course Reference Number</label>
-	        	    <input type="text" class="form-control" id="crnInput" aria-describedby="crnHelp" placeholder="Enter CRN">
-	        	    <small id="crnHelp" class="form-text text-muted">Enter the CRN of your class.</small>
-	        	    <!-- <select name="crn" id="crnInput" class="form-control"></select> -->
-	        	  </div>
-		        </form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Subscribe</button>
-		      </div>
+	        <form action="" id="subscribe-form">
+			      <div class="modal-body">
+		        	  <div class="form-group">
+		        	    <label for="nameInput">Name</label>
+		        	    <input type="text" class="form-control" id="nameInput" placeholder="Enter name" name="name" required>
+		        	  </div>
+			        	<div class="form-group">
+		        	    <label for="emailInput">Email address</label>
+		        	    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email" name="email" required>
+		        	    <small id="emailHelp" class="form-text text-muted">Enter your UCR email.</small>
+		        	  </div>
+		        	  <div class="form-group">
+		        	    <label for="crnInput">Course Reference Number</label>
+		        	    <input type="text" class="form-control" id="crnInput" aria-describedby="crnHelp" placeholder="Enter CRN" name="crn" required>
+		        	    <small id="crnHelp" class="form-text text-muted">Enter the CRN of your class.</small>
+		        	    <!-- <select name="crn" id="crnInput" class="form-control"></select> -->
+		        	  </div>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			        <button type="submit" class="btn btn-primary">Subscribe</button>
+			      </div>
+	        </form>
 		    </div>
 		  </div>
 		</div>
@@ -84,6 +84,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone-with-data.min.js"></script>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="/js/lib/typeahead.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.5/sweetalert2.all.min.js"></script>
 	<script src="/js/charts.js"></script>
 </body>
 </html>

@@ -65,12 +65,15 @@ router
     const data = await Course.collection.distinct('subject')
     res.successJson(data)
   }))
-  .get('/subscribe', AsyncHandler(async (req, res) => {
+
+router
+  .post('/subscribe', AsyncHandler(async (req, res) => {
     if (!req.body) return res.failMsg('Invalid form submission')
     if (!req.body.name || !req.body.email || !req.body.crn) return res.failMsg('Missing form fields')
     if (!validator.isEmail(req.body.email)) return res.failMsg('Invalid email address')
     // Check if CRN is valid
     const course = await Course.findOne({ courseReferenceNumber: req.body.crn }, { seatsAvailable: 1 })
+      .sort({ pollTime: -1 })
       .lean()
       .exec()
     if (!course) return res.failMsg(`No course found with CRN: ${req.body.crn}`)
