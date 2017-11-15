@@ -18,6 +18,22 @@ $.getJSON('/api/courses?distinct=subject', (res) => {
   }
 })
 
+$.getJSON('/api/courses?distinct=courseReferenceNumber', (res) => {
+  // console.log(res.data)
+  const courseNumbers = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    local: res.data
+  })
+  $('#crnInput').typeahead({
+    minLength: 1,
+    highlight: true
+  }, {
+    name: 'courseNumbers',
+    source: courseNumbers
+  })
+})
+
 fetchData(defaultCourse, (data) => {
   Highcharts.setOptions({
     global: {

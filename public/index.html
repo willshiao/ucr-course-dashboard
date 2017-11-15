@@ -34,33 +34,42 @@
 					<button class="btn" id="graph-all-btn">Graph all in</button>
 					<select name="" id="subjectSelect"></select>
 				</div>
-				<div class="col-md-3">
-					<input type="text" class="form-control" placeholder="Name">
-				</div>
-				<div class="col-md-3">
-					<input type="email" class="form-control" placeholder="Email">
-				</div>
-				<div class="col-md-2">
-					<button class="btn btn-primary" data-toggle="modal" data-target="subscribeModal">Subscribe</button>
-				</div>
+				<button class="btn btn-primary" data-toggle="modal" data-target="#subscribeModal" id="subscribe-btn" type="button">Subscribe</button>
 			</div>
 		</form>
 
-		<div class="modal" tabindex="-1" role="dialog" id="subscribeModal">
+		<!-- Modal -->
+		<div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title">Modal title</h5>
+		        <h5 class="modal-title" id="exampleModalLabel">Subscribe</h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		        <p>Modal body text goes here.</p>
+		        <form action="" id="subscribe-form">
+	        	  <div class="form-group">
+	        	    <label for="nameInput">Name</label>
+	        	    <input type="email" class="form-control" id="nameInput" placeholder="Enter name">
+	        	  </div>
+		        	<div class="form-group">
+	        	    <label for="emailInput">Email address</label>
+	        	    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+	        	    <small id="emailHelp" class="form-text text-muted">Enter your UCR email.</small>
+	        	  </div>
+	        	  <div class="form-group">
+	        	    <label for="crnInput">Course Reference Number</label>
+	        	    <input type="text" class="form-control" id="crnInput" aria-describedby="crnHelp" placeholder="Enter CRN">
+	        	    <small id="crnHelp" class="form-text text-muted">Enter the CRN of your class.</small>
+	        	    <!-- <select name="crn" id="crnInput" class="form-control"></select> -->
+	        	  </div>
+		        </form>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-primary">Save changes</button>
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Subscribe</button>
 		      </div>
 		    </div>
 		  </div>
