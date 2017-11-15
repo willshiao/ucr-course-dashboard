@@ -28,11 +28,43 @@
 			    Overlay class data?
 			  </label>
 			</div>
-
-			<button class="btn btn-primary" id="update-btn" type="submit">Update</button>
-			<button class="btn" id="graph-all-btn">Graph all in</button>
-			<select name="" id="subjectSelect"></select>
+			<div class="row">
+				<div class="col-md-4">
+					<button class="btn btn-primary" id="update-btn" type="submit">Update</button>
+					<button class="btn" id="graph-all-btn">Graph all in</button>
+					<select name="" id="subjectSelect"></select>
+				</div>
+				<div class="col-md-3">
+					<input type="text" class="form-control" placeholder="Name">
+				</div>
+				<div class="col-md-3">
+					<input type="email" class="form-control" placeholder="Email">
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary" data-toggle="modal" data-target="subscribeModal">Subscribe</button>
+				</div>
+			</div>
 		</form>
+
+		<div class="modal" tabindex="-1" role="dialog" id="subscribeModal">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Modal title</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Modal body text goes here.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	</div>
 		
 

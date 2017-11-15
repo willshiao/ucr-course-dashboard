@@ -7,7 +7,7 @@ const subscriptionSchema = new Schema({
   name: String,
   email: { index: true, type: String },
   enabled: { index: true, type: Boolean },
-  courseReferenceNumber: { index: true, type: String },
+  crn: { index: true, type: String },
   waitlistNotification: { type: Boolean, default: false }
 })
 

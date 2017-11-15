@@ -2,10 +2,15 @@
 
 const _ = require('lodash')
 const config = require('config')
+const validator = require('validator')
+const bodyParser = require('body-parser')
 const router = require('express').Router()
 const Faculty = require('../models/Faculty')
+const Subscription = require('../models/Subscription')
 const Course = require('../models/Course')
 const { AsyncHandler } = require('../lib/errorHandlers')
+
+router.use(bodyParser.urlencoded({ extended: false }))
 
 router.get('/test', (req, res) => {
   res.send('OK')
@@ -59,6 +64,28 @@ router
   .get('/courses/subjects', AsyncHandler(async (req, res) => {
     const data = await Course.collection.distinct('subject')
     res.successJson(data)
+  }))
+  .get('/subscribe', AsyncHandler(async (req, res) => {
+    if (!req.body) return res.failMsg('Invalid form submission')
+    if (!req.body.name || !req.body.email || !req.body.crn) return res.failMsg('Missing form fields')
+    if (!validator.isEmail(req.body.email)) return res.failMsg('Invalid email address')
+    // Check if CRN is valid
+    const course = await Course.findOne({ courseReferenceNumber: req.body.crn }, { seatsAvailable: 1 })
+      .lean()
+      .exec()
+    if (!course) return res.failMsg(`No course found with CRN: ${req.body.crn}`)
+    if (course.seatsAvailable > 0) return res.failMsg(`Course is not full: ${course.seatsAvailable} seats are still available`)
+
+    const subCount = await Subscription.count({
+      email: req.body.email,
+      crn: req.body.crn,
+      enabled: true
+    })
+    if (subCount > 0) return res.failMsg('This email is already subscribed to this course')
+
+    const sub = new Subscription(req.body)
+    await sub.save()
+    return res.successJson()
   }))
 
 module.exports = router

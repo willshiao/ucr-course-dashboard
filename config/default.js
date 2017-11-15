@@ -1,10 +1,13 @@
 'use strict'
 
+const path = require('path')
+
 module.exports = {
   debug: false,
 
   site: {
-    port: 3000
+    port: 3000,
+    pagesDir: path.resolve(__dirname, '../pages')
   },
 
   db: {
