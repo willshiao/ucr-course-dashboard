@@ -23,7 +23,7 @@ module.exports = {
   },
 
   catalog: {
-    terms: [201810]
+    terms: [201810, 201820]
   },
 
   logger: {

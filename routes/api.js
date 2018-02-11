@@ -8,6 +8,7 @@ const router = require('express').Router()
 const Faculty = require('../models/Faculty')
 const Subscription = require('../models/Subscription')
 const Course = require('../models/Course')
+const logger = require('../lib/logger')
 const { AsyncHandler } = require('../lib/errorHandlers')
 
 router.use(bodyParser.urlencoded({ extended: false }))
@@ -57,13 +58,43 @@ router
     const courses = await query.exec()
     res.successJson(courses)
   }))
+
   .get('/courses/distinct', AsyncHandler(async (req, res) => {
     const data = await Course.collection.distinct('subjectCourse')
     res.successJson(data)
   }))
+
   .get('/courses/subjects', AsyncHandler(async (req, res) => {
     const data = await Course.collection.distinct('subject')
     res.successJson(data)
+  }))
+
+  .get('/courses/times', AsyncHandler(async (req, res) => {
+    if (!req.query.term) return res.failMsg('Missing term field')
+
+    const filter = { subject: 'CS' }
+
+    if (req.query.courses) filter.subjectCourse = { $in: req.query.courses.split(',') }
+
+    Course.collection.aggregate([
+      { $match: {term: req.query.term} },
+      { $match: filter },
+      { $sort: { pollTime: -1 } },
+      {
+        $group: {
+          _id: '$courseReferenceNumber',
+          subjectCourse: { $first: '$subjectCourse' },
+          count: {'$sum': 1},
+          scheduleType: { $first: '$scheduleTypeDescription' },
+          location: {
+            $last: { $arrayElemAt: ['$meetingsFaculty', 0] }
+          }
+        }
+      }
+    ], (err, data) => {
+      if (err) logger.error('Error aggregating data: ', err)
+      res.successJson(data)
+    })
   }))
 
 router
