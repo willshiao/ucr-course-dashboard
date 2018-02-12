@@ -7,9 +7,10 @@ let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
+const term = '201820'
 console.log('Course:', courseSelector.val())
 
-$.getJSON('/api/courses?distinct=subject', (res) => {
+$.getJSON(`/api/courses?distinct=subject&term=${term}`, (res) => {
   const options = $('#subjectSelect')
   options.html('')
 
@@ -18,7 +19,7 @@ $.getJSON('/api/courses?distinct=subject', (res) => {
   }
 })
 
-$.getJSON('/api/courses?distinct=courseReferenceNumber', (res) => {
+$.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
   // console.log(res.data)
   const courseNumbers = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -71,7 +72,7 @@ fetchData(defaultCourse, (data) => {
 })
 
 function graphEverything (subject) {
-  $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=Lecture`, (res) => {
+  $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=Lecture&term=${term}`, (res) => {
     if (!$('#overlay-check').is(':checked')) clearChart()
     function getData (index) {
       if (index >= res.data.length) return null
@@ -134,7 +135,7 @@ $('#subscribe-form').submit((evt) => {
   })
 })
 
-$.getJSON('/api/courses/distinct', (res) => {
+$.getJSON(`/api/courses/distinct&term=${term}`, (res) => {
   if (res.status !== 'success') return console.error('Failed to fetch course listing')
   const data = res.data
 
@@ -164,7 +165,7 @@ function clearChart () {
 }
 
 function getSections (course, type = 'Lecture', cb) {
-  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=${type}&distinct=courseReferenceNumber`, function (res) {
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=${type}&distinct=courseReferenceNumber&term=${term}`, function (res) {
     if (res.status !== 'success') return console.error('Failed to get sections')
     const options = $('#crnSelect')
     options.html('')
@@ -177,7 +178,7 @@ function getSections (course, type = 'Lecture', cb) {
 }
 
 function fetchData (course, cb) {
-  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture`, function (res) {
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture&term=${term}`, function (res) {
     console.log(res)
     if (res.status !== 'success') return console.error('Failed to make request')
     let data = processData(res.data)
@@ -187,7 +188,7 @@ function fetchData (course, cb) {
 }
 
 function fetchDataByCrn (crn, cb) {
-  $.getJSON(`/api/courses?courseReferenceNumber=${crn}&fields=enrollment,pollTime,subjectCourse`, (res) => {
+  $.getJSON(`/api/courses?courseReferenceNumber=${crn}&fields=enrollment,pollTime,subjectCourse&term=${term}`, (res) => {
     if (res.status !== 'success') return console.error('Failed to get course data by CRN')
     return cb(processData(res.data), res.data[0] ? res.data[0].subjectCourse : null)
   })

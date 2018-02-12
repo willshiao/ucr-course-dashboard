@@ -6,7 +6,7 @@ const MeetingsFaculty = require('./MeetingsFaculty').schema
 
 const courseSchema = new Schema({
   id: { type: Number, index: true },
-  term: { type: String },
+  term: { type: String, index: true },
   termDesc: String,
   courseReferenceNumber: { type: String, index: true },
   partOfTerm: String,
