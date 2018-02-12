@@ -35,7 +35,7 @@ $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
   })
 })
 
-fetchData(defaultCourse, (data) => {
+fetchData(defaultCourse, 'Lecture,Seminar', (data) => {
   Highcharts.setOptions({
     global: {
       timezone: 'America/Los_Angeles'
@@ -71,8 +71,8 @@ fetchData(defaultCourse, (data) => {
   })
 })
 
-function graphEverything (subject) {
-  $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=Lecture&term=${term}`, (res) => {
+function graphEverything (subject, type = 'Lecture') {
+  $.getJSON(`/api/courses?distinct=courseReferenceNumber&subject=${subject}&scheduleTypeDescription=${type}&term=${term}`, (res) => {
     if (!$('#overlay-check').is(':checked')) clearChart()
     function getData (index) {
       if (index >= res.data.length) return null
@@ -92,7 +92,7 @@ function graphEverything (subject) {
 }
 
 $('#graph-all-btn').click(function () {
-  graphEverything($('#subjectSelect').val())
+  graphEverything($('#subjectSelect').val(), 'Lecture,Seminar')
 })
 
 $('#courseForm').submit((evt) => {
@@ -152,7 +152,7 @@ $.getJSON(`/api/courses?distinct=subjectCourse&term=${term}`, (res) => {
     source: courses
   }).bind('typeahead:idle', (ev) => {
     $('#update-btn').prop('disabled', true)
-    getSections($('#search').val(), 'Lecture', (data) => {
+    getSections($('#search').val(), 'Lecture,Seminar', (data) => {
       if (data.length > 0) $('#update-btn').prop('disabled', false)
     })
   })
@@ -177,8 +177,8 @@ function getSections (course, type = 'Lecture', cb) {
   })
 }
 
-function fetchData (course, cb) {
-  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=Lecture&term=${term}`, function (res) {
+function fetchData (course, type = 'Lecture', cb) {
+  $.getJSON(`/api/courses?subjectCourse=${course}&scheduleTypeDescription=${type}&term=${term}`, function (res) {
     console.log(res)
     if (res.status !== 'success') return console.error('Failed to make request')
     let data = processData(res.data)
