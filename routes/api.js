@@ -47,7 +47,7 @@ router
     const fields = req.query.fields ? req.query.fields.split(',') : {}
     const scheduleType = req.query.scheduleTypeDescription ? { $in: req.query.scheduleTypeDescription.split(',') } : null
 
-    if (scheduleType) searchQuery.scheduleType = scheduleType
+    if (scheduleType) searchQuery.scheduleTypeDescription = scheduleType
 
     let query = Course.find(searchQuery, fields)
 
