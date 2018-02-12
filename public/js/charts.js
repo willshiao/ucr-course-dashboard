@@ -44,7 +44,7 @@ fetchData(defaultCourse, (data) => {
 
   myChart = Highcharts.chart('mainChart', {
     title: {
-      text: 'UCR Course Data (Winter 2017)'
+      text: 'UCR Course Data (Spring 2018)'
     },
     subtitle: {
       text: 'Click and drag to zoom'
