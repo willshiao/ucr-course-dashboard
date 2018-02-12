@@ -135,7 +135,7 @@ $('#subscribe-form').submit((evt) => {
   })
 })
 
-$.getJSON(`/api/courses/distinct&term=${term}`, (res) => {
+$.getJSON(`/api/courses?distinct=subjectCourse&term=${term}`, (res) => {
   if (res.status !== 'success') return console.error('Failed to fetch course listing')
   const data = res.data
 
