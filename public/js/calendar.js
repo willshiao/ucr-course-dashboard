@@ -50,6 +50,9 @@ function processData (data) {
 
 function queryApi (cb) {
   const courses = $('#courses').val()
+    .split(',')
+    .map(s => s.trim())
+    .join(',')
   const courseType = $('#courseType').val()
   $.getJSON(`/api/courses/times?courses=${courses}&scheduleType=${courseType}&term=${term}`, (res) => {
     if (res.status !== 'success') return console.error('Failed to get matching courses:', res)
@@ -66,18 +69,20 @@ $(function () {
       header: {
         left: 'prev,next today',
         center: 'title',
-        right: 'month,agendaWeek,agendaDay'
+        right: 'agendaWeek,agendaDay'
       },
-      weekends: false,
-      events
+      defaultView: 'agendaWeek',
+      weekends: false
+      // events
     })
   })
 
   $('#courseForm').submit((evt) => {
     evt.preventDefault()
     queryApi(events => {
-      console.log('Running re-render')
-      // $('#calendar').fullCalendar('updateEvents', events)
+      console.log('Running re-render with data:', events)
+      $('#calendar').fullCalendar('removeEvents')
+      $('#calendar').fullCalendar('renderEvents', events)
       // $('#calendar').fullCalendar('rerenderEvents')
     })
   })
