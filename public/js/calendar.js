@@ -81,6 +81,9 @@ $(function () {
         center: 'title',
         right: 'agendaWeek,agendaDay'
       },
+      eventClick: function (calEvent, jsEvent, view) {
+        $('#calendar').fullCalendar('removeEvents', calEvent.id)
+      },
       defaultView: 'agendaWeek',
       weekends: false,
       minTime: '7:00',
