@@ -42,12 +42,15 @@ router
 
 router
   .get('/courses', AsyncHandler(async (req, res) => {
-    const searchQuery = _.pick(req.query, ['subject', 'subjectCourse', 'courseReferenceNumber', 'id', 'term'])
+    const searchQuery = _.pick(req.query, ['subject', 'courseReferenceNumber', 'id', 'term'])
     const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
     const fields = req.query.fields ? req.query.fields.split(',') : {}
+
+    const subjectCourses = req.query.courses ? { $in: req.query.subjectCourse.split(',') } : null
     const scheduleType = req.query.scheduleTypeDescription ? { $in: req.query.scheduleTypeDescription.split(',') } : null
 
     if (scheduleType) searchQuery.scheduleTypeDescription = scheduleType
+    if (subjectCourses) searchQuery.subjectCourseDescription = subjectCourses
 
     let query = Course.find(searchQuery, fields)
 
