@@ -59,7 +59,7 @@ function processData (data) {
 function queryApi (cb) {
   const courses = $('#courses').val()
     .split(',')
-    .map(s => s.trim())
+    .map(s => s.trim().toUpperCase())
     .join(',')
   const courseType = $('#courseType').val()
   const subject = $('#subject').val()
