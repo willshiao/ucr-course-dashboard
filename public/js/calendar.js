@@ -42,9 +42,9 @@ function processData (data) {
         title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
         start: momentFromTime(mt.beginTime, day),
         template: momentFromTime(mt.endTime, day),
-        backgroundColor: COLORS[colorIndex],
+        backgroundColor: COLORS[colorIndex]
       }
-      if(makeTransparent) {
+      if (makeTransparent) {
         event.backgroundColor = 'rgba(46,125,50,0.3)'
         delete event.title
         event.overlap = true
