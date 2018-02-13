@@ -1,7 +1,11 @@
 'use strict'
 
-const term = '201820'
-const colors = [
+// Yes, I know the code is messy
+// Please don't read it (for the sake of your eyes)
+
+const TERM = '201820'
+const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+const COLORS = [
   '#F44336', '#B71C1C', '#D50000',  // Reds
   '#E91E63', '#880E4F', '#C51162',  // Pinks
   '#9C27B0', '#4A148C', '#AA00FF',  // Purples
@@ -9,16 +13,6 @@ const colors = [
   '#4CAF50', '#1B5E20', '#00C853',  // Greens
   '#FFEB3B', '#F57F17', '#FFD600'   // Yellows
 ]
-
-// function getDays() {
-//   let start = moment().sub(15, 'd')
-//   let end = moment().add(15, 'd')
-
-//   const arr = []
-//   while(start.isBefore(end)) {
-//     start.add(1, 'd')
-//   }
-// }
 
 function momentFromTime (time, day) {
   const date = moment()
@@ -32,7 +26,6 @@ function momentFromTime (time, day) {
 
 // Function to process data returned from API
 function processData (data) {
-  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
   let colorIndex = 0
   const output = []
 
@@ -41,17 +34,17 @@ function processData (data) {
     const mt = loc.meetingTime
     if (!loc || !mt) return false
 
-    days.forEach(day => {
+    DAYS.forEach(day => {
       if (!mt[day]) return false
       output.push({
         id: loc.courseReferenceNumber,
         title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
         start: momentFromTime(mt.beginTime, day),
         template: momentFromTime(mt.endTime, day),
-        backgroundColor: colors[colorIndex]
+        backgroundColor: COLORS[colorIndex]
       })
     })
-    colorIndex++
+    colorIndex = (colorIndex + 1) % COLORS.length
   })
   return output
 }
@@ -62,7 +55,9 @@ function queryApi (cb) {
     .map(s => s.trim())
     .join(',')
   const courseType = $('#courseType').val()
-  $.getJSON(`/api/courses/times?courses=${courses}&scheduleType=${courseType}&term=${term}`, (res) => {
+  const subject = $('#subject').val()
+
+  $.getJSON(`/api/courses/times?courses=${courses}&scheduleType=${courseType}&term=${TERM}&subject=${subject}`, (res) => {
     if (res.status !== 'success') return console.error('Failed to get matching courses:', res)
     const data = processData(res.data)
     console.log(data)
