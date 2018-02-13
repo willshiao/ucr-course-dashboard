@@ -32,16 +32,15 @@ function processData (data) {
 
   data.forEach(item => {
     const loc = item.location
-    const mt = loc.meetingTime
-    if (!loc || !mt) return false
+    if (!loc || !loc.meetingTime) return false
 
     DAYS.forEach(day => {
-      if (!mt[day]) return false
+      if (!loc.meetingTime[day]) return false
       const event = {
         id: loc.courseReferenceNumber,
         title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
-        start: momentFromTime(mt.beginTime, day),
-        template: momentFromTime(mt.endTime, day),
+        start: momentFromTime(loc.meetingTime.beginTime, day),
+        template: momentFromTime(loc.meetingTime.endTime, day),
         backgroundColor: COLORS[colorIndex]
       }
       if (makeTransparent) {
