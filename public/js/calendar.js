@@ -38,13 +38,16 @@ function processData (data) {
       if (!mt[day]) return false
       output.push({
         id: loc.courseReferenceNumber,
-        title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
+        className: 'customEvent',
+        // title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
         start: momentFromTime(mt.beginTime, day),
         template: momentFromTime(mt.endTime, day),
-        backgroundColor: COLORS[colorIndex]
+        // backgroundColor: COLORS[colorIndex],
+        backgroundColor: 'rgba(46,125,50,0.3)',
+        overlap: true
       })
     })
-    colorIndex = (colorIndex + 1) % COLORS.length
+    // colorIndex = (colorIndex + 1) % COLORS.length
   })
   return output
 }
@@ -76,6 +79,8 @@ $(function () {
       },
       defaultView: 'agendaWeek',
       weekends: false,
+      minTime: '7:00',
+      maxTime: '20:00',
       events
     })
   })
