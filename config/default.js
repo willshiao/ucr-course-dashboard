@@ -19,7 +19,8 @@ module.exports = {
 
   query: {
     courseLimit: 120,  // Max number of courses displayed
-    facultyLimit: 100 // Max number of faculty displayed
+    facultyLimit: 100, // Max number of faculty displayed
+    courseAggregationLimit: 200 // Max number of courses displayed in aggregation query
   },
 
   catalog: {

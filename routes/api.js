@@ -46,11 +46,13 @@ router
     const limit = req.query.limit ? Math.min(config.get('query.courseLimit'), req.query.limit) : config.get('query.courseLimit')
     const fields = req.query.fields ? req.query.fields.split(',') : {}
 
-    const subjectCourses = req.query.courses ? { $in: req.query.subjectCourse.split(',') } : null
-    const scheduleType = req.query.scheduleTypeDescription ? { $in: req.query.scheduleTypeDescription.split(',') } : null
+    if (req.query.subjectCourse) {
+      searchQuery.subjectCourse = { $in: req.query.subjectCourse.split(',') }
+    }
 
-    if (scheduleType) searchQuery.scheduleTypeDescription = scheduleType
-    if (subjectCourses) searchQuery.subjectCourseDescription = subjectCourses
+    if (req.query.scheduleTypeDescription) {
+      searchQuery.scheduleTypeDescription = { $in: req.query.scheduleTypeDescription.split(',') }
+    }
 
     let query = Course.find(searchQuery, fields)
 
@@ -77,15 +79,22 @@ router
 
   .get('/courses/times', AsyncHandler(async (req, res) => {
     if (!req.query.term) return res.failMsg('Missing term field')
+    const subject = req.query.subject || 'CS'
+    let limit = config.get('query.courseAggregationLimit')
 
-    const filter = { subject: 'CS' }
+    if (req.query.limit && Number.isNumber(parseInt(req.query.limit, 10))) {
+      limit = Math.min(parseInt(req.query.limit), config.get('query.courseAggregationLimit'))
+    }
 
+    const filter = { subject, term: req.query.term }
+
+    if (req.query.scheduleType) filter.scheduleTypeDescription = { $in: req.query.scheduleType.split(',') }
     if (req.query.courses) filter.subjectCourse = { $in: req.query.courses.split(',') }
 
     Course.collection.aggregate([
-      { $match: {term: req.query.term} },
       { $match: filter },
       { $sort: { pollTime: -1 } },
+      { $limit: limit },
       {
         $group: {
           _id: '$courseReferenceNumber',

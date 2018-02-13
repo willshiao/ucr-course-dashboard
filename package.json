@@ -31,7 +31,8 @@
   },
   "standard": {
     "globals": [
-      "$"
+      "$",
+      "moment"
     ]
   }
 }
