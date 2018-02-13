@@ -85,7 +85,7 @@ $(function () {
       defaultView: 'agendaWeek',
       weekends: false,
       minTime: '7:00',
-      maxTime: '20:00',
+      maxTime: '24:00',
       events
     })
   })
