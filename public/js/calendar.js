@@ -79,12 +79,19 @@ $(function () {
       events
     })
   })
+  let pending = false
 
   $('#courseForm').submit((evt) => {
     evt.preventDefault()
+    if (pending) return false
+    // $('#courses').prop('disabled', true)
+    pending = true
+
     queryApi(events => {
       $('#calendar').fullCalendar('removeEvents')
       $('#calendar').fullCalendar('renderEvents', events)
+      pending = false
+      // $('#courses').prop('disabled', false)
     })
   })
 })
