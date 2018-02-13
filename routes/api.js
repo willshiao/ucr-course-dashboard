@@ -79,15 +79,15 @@ router
 
   .get('/courses/times', AsyncHandler(async (req, res) => {
     if (!req.query.term) return res.failMsg('Missing term field')
-    const subject = req.query.subject || 'CS'
     let limit = config.get('query.courseAggregationLimit')
 
     if (req.query.limit && Number.isNumber(parseInt(req.query.limit, 10))) {
       limit = Math.min(parseInt(req.query.limit), config.get('query.courseAggregationLimit'))
     }
 
-    const filter = { subject, term: req.query.term }
+    const filter = { term: req.query.term }
 
+    if (req.query.subject) filter.subject = { $in: req.query.subject.split(',') }
     if (req.query.scheduleType) filter.scheduleTypeDescription = { $in: req.query.scheduleType.split(',') }
     if (req.query.courses) filter.subjectCourse = { $in: req.query.courses.split(',') }
 
