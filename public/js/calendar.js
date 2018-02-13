@@ -28,6 +28,7 @@ function momentFromTime (time, day) {
 function processData (data) {
   let colorIndex = 0
   const output = []
+  const makeTransparent = $('#transparent').is(':checked')
 
   data.forEach(item => {
     const loc = item.location
@@ -36,18 +37,22 @@ function processData (data) {
 
     DAYS.forEach(day => {
       if (!mt[day]) return false
-      output.push({
+      const event = {
         id: loc.courseReferenceNumber,
-        className: 'customEvent',
-        // title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
+        title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
         start: momentFromTime(mt.beginTime, day),
         template: momentFromTime(mt.endTime, day),
-        // backgroundColor: COLORS[colorIndex],
-        backgroundColor: 'rgba(46,125,50,0.3)',
-        overlap: true
-      })
+        backgroundColor: COLORS[colorIndex],
+      }
+      if(makeTransparent) {
+        event.backgroundColor = 'rgba(46,125,50,0.3)'
+        delete event.title
+        event.overlap = true
+        event.className = 'customEvent'
+      }
+      output.push(event)
     })
-    // colorIndex = (colorIndex + 1) % COLORS.length
+    colorIndex = (colorIndex + 1) % COLORS.length
   })
   return output
 }
