@@ -152,7 +152,7 @@ $.getJSON(`/api/courses?distinct=subjectCourse&term=${term}`, (res) => {
     source: courses
   }).bind('typeahead:idle', (ev) => {
     $('#update-btn').prop('disabled', true)
-    getSections($('#search').val(), 'Lecture,Seminar', (data) => {
+    getSections($('#search').val(), '', (data) => {
       if (data.length > 0) $('#update-btn').prop('disabled', false)
     })
   })
