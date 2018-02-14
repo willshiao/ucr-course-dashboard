@@ -20,6 +20,7 @@ $('#termSelect').on('change', function (evt) {
 $.getJSON(`/api/courses?distinct=subject&term=${term}`, (res) => {
   const options = $('#subjectSelect')
   options.html('')
+  res.data.sort()
 
   for (let i = 0; i < res.data.length; ++i) {
     options.append($('<option></option>').html(res.data[i]))
