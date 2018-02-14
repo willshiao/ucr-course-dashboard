@@ -7,8 +7,15 @@ let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
-const term = '201820'
+const currentTerm = '201820'
+let term = currentTerm
 console.log('Course:', courseSelector.val())
+
+$('#termSelect').on('change', function (evt) {
+  term = $('#termSelect').val()
+  const termName = $('#termSelect option:selected').text()
+  myChart.setTitle({ text: `UCR Course Data (${termName})` })
+})
 
 $.getJSON(`/api/courses?distinct=subject&term=${term}`, (res) => {
   const options = $('#subjectSelect')
@@ -169,6 +176,7 @@ function getSections (course, type = 'Lecture', cb) {
     if (res.status !== 'success') return console.error('Failed to get sections')
     const options = $('#crnSelect')
     options.html('')
+    res.data.sort()
 
     for (let i = 0; i < res.data.length; ++i) {
       options.append($('<option></option>').html(res.data[i]))
