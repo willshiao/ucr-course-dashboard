@@ -7,7 +7,7 @@ let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
-const currentTerm = '201820'
+const currentTerm = '201840'
 let term = currentTerm
 console.log('Course:', courseSelector.val())
 
@@ -52,7 +52,7 @@ fetchData(defaultCourse, 'Lecture,Seminar', (data) => {
 
   myChart = Highcharts.chart('mainChart', {
     title: {
-      text: 'UCR Course Data (Spring 2018)'
+      text: 'UCR Course Data (Fall 2018)'
     },
     subtitle: {
       text: 'Click and drag to zoom'
