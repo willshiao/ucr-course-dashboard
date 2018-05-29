@@ -40,7 +40,7 @@ function processData (data) {
         id: loc.courseReferenceNumber,
         title: `${item.subjectCourse} (${item.scheduleType}) [${loc.courseReferenceNumber}]`,
         start: momentFromTime(loc.meetingTime.beginTime, day),
-        template: momentFromTime(loc.meetingTime.endTime, day),
+        end: momentFromTime(loc.meetingTime.endTime, day),
         backgroundColor: COLORS[colorIndex]
       }
       if (makeTransparent) {
