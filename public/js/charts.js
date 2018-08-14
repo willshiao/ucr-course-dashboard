@@ -47,39 +47,43 @@ $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
   })
 })
 
-fetchData(defaultCourse, 'Lecture', (data) => {
-  Highcharts.setOptions({
-    global: {
-      timezone: 'America/Los_Angeles'
-    }
-  })
-
-  myChart = Highcharts.chart('mainChart', {
-    title: {
-      text: 'UCR Course Data (Fall 2018)'
-    },
-    subtitle: {
-      text: 'Click and drag to zoom'
-    },
-    chart: {
-      zoomType: 'x'
-    },
-    xAxis: {
-      type: 'datetime',
-      title: { text: 'Time' }
-    },
-    plotOptions: {
-      line: {
-        marker: {
-          enabled: true
-        }
+getSections(defaultCourse, 'Lecture', (crns) => {
+  if(crns.length < 1) console.error('Failed to get CRNs for default course')
+  
+  fetchDataByCrn(crns[0], (data) => {
+    Highcharts.setOptions({
+      global: {
+        timezone: 'America/Los_Angeles'
       }
-    },
-    series: [{
-      data,
-      name: `${defaultCourse} enrollment`,
-      step: true
-    }]
+    })
+
+    myChart = Highcharts.chart('mainChart', {
+      title: {
+        text: 'UCR Course Data (Fall 2018)'
+      },
+      subtitle: {
+        text: 'Click and drag to zoom'
+      },
+      chart: {
+        zoomType: 'x'
+      },
+      xAxis: {
+        type: 'datetime',
+        title: { text: 'Time' }
+      },
+      plotOptions: {
+        line: {
+          marker: {
+            enabled: true
+          }
+        }
+      },
+      series: [{
+        data,
+        name: `${defaultCourse} enrollment`,
+        step: true
+      }]
+    })
   })
 })
 
