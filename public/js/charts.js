@@ -43,7 +43,7 @@ $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
   })
 })
 
-fetchData(defaultCourse, 'Lecture,Seminar', (data) => {
+fetchData(defaultCourse, 'Lecture', (data) => {
   Highcharts.setOptions({
     global: {
       timezone: 'America/Los_Angeles'
