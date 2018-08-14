@@ -1,14 +1,18 @@
 'use strict'
 
-// The code is messy
-// Please don't read it (for the sake of your eyes)
+//
+// Yes, I know the code is messy
+//
 
 let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
 const currentTerm = '201840'
+
+let storedCrns = 'CS111' // Course that the current CRNs are for
 let term = currentTerm
+
 console.log('Course:', courseSelector.val())
 
 $('#termSelect').on('change', function (evt) {
@@ -103,28 +107,37 @@ $('#graph-all-btn').click(function () {
   graphEverything($('#subjectSelect').val(), 'Lecture,Seminar')
 })
 
+
 $('#courseForm').submit((evt) => {
   evt.preventDefault()
   const newClass = courseSelector.val()
-  const newCrn = $('#crnSelect').val()
+  let newCrn = $('#crnSelect').val()
   const name = `${newClass} (${newCrn}) enrollment`
 
-  fetchDataByCrn(newCrn, (data) => {
-    if ($('#overlay-check').is(':checked')) {
-      myChart.addSeries({
-        data,
-        name,
-        step: true
-      })
-    } else {
-      clearChart()
-      myChart.addSeries({
-        data,
-        name,
-        step: true
-      })
-    }
-  })
+  const updateChart = function() {
+    fetchDataByCrn(newCrn, (data) => {
+      if ($('#overlay-check').is(':checked')) {
+        myChart.addSeries({
+          data,
+          name,
+          step: true
+        })
+      } else {
+        clearChart()
+        myChart.addSeries({
+          data,
+          name,
+          step: true
+        })
+      }
+    })
+  }
+
+  if(storedCrns !== newClass) {
+    getSections(newClass, '', updateChart)
+  } else {
+    updateChart()
+  }
 })
 
 $('#subscribe-form').submit((evt) => {
@@ -152,7 +165,7 @@ $.getJSON(`/api/courses?distinct=subjectCourse&term=${term}`, (res) => {
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     local: data
   })
-  $('#search').typeahead({
+  courseSelector.typeahead({
     minLength: 1,
     highlight: true
   }, {
@@ -160,7 +173,8 @@ $.getJSON(`/api/courses?distinct=subjectCourse&term=${term}`, (res) => {
     source: courses
   }).bind('typeahead:idle', (ev) => {
     $('#update-btn').prop('disabled', true)
-    getSections($('#search').val(), '', (data) => {
+    getSections(courseSelector.val(), '', (data) => {
+      console.log('Data:', data)
       if (data.length > 0) $('#update-btn').prop('disabled', false)
     })
   })
@@ -182,6 +196,8 @@ function getSections (course, type = 'Lecture', cb) {
     for (let i = 0; i < res.data.length; ++i) {
       options.append($('<option></option>').html(res.data[i]))
     }
+
+    storedCrns = courseSelector.val()
     if (cb) cb(res.data)
   })
 }
