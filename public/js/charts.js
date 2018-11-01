@@ -8,10 +8,11 @@ let myChart
 
 const courseSelector = $('#search')
 const defaultCourse = 'CS111'
-const currentTerm = '201840'
+const currentTerm = '201910'
 
 let storedCrns = 'CS111' // Course that the current CRNs are for
 let term = currentTerm
+let hound = null
 
 console.log('Course:', courseSelector.val())
 
@@ -19,6 +20,13 @@ $('#termSelect').on('change', function (evt) {
   term = $('#termSelect').val()
   const termName = $('#termSelect option:selected').text()
   myChart.setTitle({ text: `UCR Course Data (${termName})` })
+
+  // Update Bloodhound data
+  $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
+    hound.clear()
+    hound.local = res.data
+    hound.initialize(true)
+  })
 })
 
 $.getJSON(`/api/courses?distinct=subject&term=${term}`, (res) => {
@@ -32,8 +40,7 @@ $.getJSON(`/api/courses?distinct=subject&term=${term}`, (res) => {
 })
 
 $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
-  // console.log(res.data)
-  const courseNumbers = new Bloodhound({
+  hound = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.whitespace,
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     local: res.data
@@ -43,7 +50,7 @@ $.getJSON(`/api/courses?distinct=courseReferenceNumber&term=${term}`, (res) => {
     highlight: true
   }, {
     name: 'courseNumbers',
-    source: courseNumbers
+    source: hound
   })
 })
 

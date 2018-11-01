@@ -3,7 +3,7 @@
 // Yes, I know the code is messy
 // Please don't read it (for the sake of your eyes)
 
-const TERM = '201840'
+const TERM = '201910'
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 const COLORS = [
   '#F44336', '#B71C1C', '#D50000',  // Reds
